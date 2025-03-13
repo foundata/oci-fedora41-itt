@@ -12,7 +12,7 @@ ENV container=podman
 # loss of partial output if an application crashes.
 ENV PYTHONUNBUFFERED=1
 
-# Optional: Update system and clean DNF cache.
+# Update system and clean DNF cache.
 # Commented out as we rely on regular rebuilds of the base image until EOL
 # instead, avoiding the downsides of forced timestamp updates and increased
 # layer sizes when the used base image was optimized.
@@ -30,18 +30,28 @@ RUN dnf -y install systemd && \
     rm -f /lib/systemd/system/basic.target.wants/* && \
     rm -f /lib/systemd/system/anaconda.target.wants/*
 
-# Install other required packages and clean-up package manager caches
+# Install required packages and clean-up package manager caches afterwards.
+# Packages are included for these purposes:
+#
+# - Overall compatibility and network functionality:
+#   iproute, which
+#
+# - Easier debugging within the container (good feature-to-size ratio):
+#   iputils, less, procps-ng, vim-minimal
+#
+# - Accessing a VM via Ansible:
+#   python3, python3-libdnf5, sudo
 RUN dnf -y install \
-        python3 \
-        sudo \
-        which \
-        python3-libdnf \
-        procps-ng \
-        iputils \
         iproute \
+        which \
+        iputils \
         less \
-        vim-minimal && \
-    dnf clean all
+        procps-ng \
+        vim-minimal \
+        python3 \
+        python3-libdnf5 \
+        sudo \
+    && dnf clean all
 
 # Ensure non-interactive sudo commands work in containerized environments where
 # TTY allocation is often unavailable or undesired (if needed, it is usually
