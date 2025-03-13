@@ -1,4 +1,4 @@
-# [OCI](https://opencontainers.org/) image: Fedora 41, Integration Test Target (ITT)
+# [OCI](https://opencontainers.org/) Image: Fedora 41, Integration Test Target (ITT)
 
 Fedora 41 (Linux) for integration testing.
 
@@ -80,7 +80,9 @@ To build the image locally, do the following:
 
 ## Notes<a id="notes"></a>
 
-This image is built and tested with [Podman](https://podman.io/) only. We currently do *not* support [Docker](https://www.docker.com/) (but it might work with `sudo` and `--privileged --volume=/sys/fs/cgroup/systemd:/sys/fs/cgroup/systemd:rw --cgroupns=host --env container=docker` instead of `--systemd=always`).
+This image is built and tested with [Podman](https://podman.io/) only.
+
+We currently do *not* support [Docker](https://www.docker.com/) (but it might work with `sudo` and `--privileged --volume=/sys/fs/cgroup/systemd:/sys/fs/cgroup/systemd:rw --cgroupns=host --env container=docker` instead of `--systemd=always`).
 
 > **Important**: This image is not hardened or optimized for production use. It prioritizes compatibility and functionality over security and performance and is for usage in isolated environments only.
 
