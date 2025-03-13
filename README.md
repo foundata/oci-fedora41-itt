@@ -52,11 +52,11 @@ To build the image locally, do the following:
 
 1. [Install Podman](https://podman.io/docs/installation).
 2. Use the image you built earlier or pull the image from a registry:
-   - [Quay](https://quay.io/):
+   - [Quay](https://quay.io/repository/foundata/oci-fedora41-itt):
      ```bash
      podman pull quay.io/foundata/oci-fedora41-itt:latest
      ```
-   - [Docker Hub](https://hub.docker.com/):
+   - [Docker Hub](https://hub.docker.com/r/foundata/oci-fedora41-itt):
      ```bash
      podman pull docker.io/foundata/oci-fedora41-itt:latest
      ```
