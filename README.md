@@ -1,8 +1,8 @@
-# [OCI](https://opencontainers.org/) Image: Fedora 41, Integration Test Target (ITT)
+# OCI Image: Fedora 41, Integration Test Target (ITT)
 
-Fedora 41 (Linux) for integration testing.
+[Fedora 41](https://docs.fedoraproject.org/en-US/releases/f41/) (Linux) for integration testing.
 
-Main features:
+Main features of the [OCI](https://opencontainers.org/) image:
 
 * Fully functional [`systemd`](https://systemd.io/) (not a shim)
 * Unprivileged execution support
@@ -64,7 +64,7 @@ To build the image locally, do the following:
    ```bash
    podman run --detach --systemd=always oci-fedora41-itt:latest "/usr/sbin/init"
    ```
-   Note: On SELinux-enabled systems, systemd attempts to write to the cgroup filesystem, which is typically denied by default security policies. To allow this operation, you must enable the `container_manage_cgroup` boolean on the host system: `sudo setsebool -P container_manage_cgroup 1`
+   Note: **On SELinux-enabled systems**, systemd attempts to write to the cgroup filesystem, which is typically denied by default security policies. To allow this operation, you must **enable the `container_manage_cgroup` boolean** on the host system: `sudo setsebool -P container_manage_cgroup 1`
 4. You can now work with the container, e.g. open a Bash terminal:
    ```bash
    podman ps
