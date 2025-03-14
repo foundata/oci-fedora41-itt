@@ -20,10 +20,11 @@ ENV PYTHONUNBUFFERED=1
 #   https://www.freedesktop.org/software/systemd/man/latest/bootup.html
 RUN dnf -y install systemd \
     # General
-    && rm -rf "/lib/systemd/system/basic.target.wants/"* \
     && rm -f "/lib/systemd/system/sockets.target.wants/"*"udev"* \
     && rm -f "/lib/systemd/system/sockets.target.wants/"*"initctl"* \
     && rm -f "/lib/systemd/system/"*"ask-password"* \
+    # Fedora specific
+    && rm -f "/lib/systemd/system/basic.target.wants/"* \
     && (for i in "/etc/systemd/system/"*".wants/"*; do \
         # delete all files except the ones mentioned
         if  [ "$(basename "${i}")" = "crond.service" ] \
@@ -37,7 +38,6 @@ RUN dnf -y install systemd \
         then continue; \
         else rm -f "${i}"; fi; \
     done) \
-    # Fedora specific
     && rm -f "/lib/systemd/system/anaconda.target.wants/"*
 
 # Install required packages and clean-up package manager caches afterwards.
