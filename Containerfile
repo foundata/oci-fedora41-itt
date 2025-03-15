@@ -12,48 +12,21 @@ ENV container=podman
 # loss of partial output if an application crashes.
 ENV PYTHONUNBUFFERED=1
 
-# Install systemd, remove inconvenient targets and services. Helpful resources
-# to determine problematic units to be removed during development:
-#   systemctl list-dependencies
-#   systemctl list-units --state=waiting
-#   systemctl list-units --state=failed
-#   https://www.freedesktop.org/software/systemd/man/latest/bootup.html
-RUN dnf -y install systemd \
-    # General
-    && rm -f "/lib/systemd/system/sockets.target.wants/"*"udev"* \
-    && rm -f "/lib/systemd/system/sockets.target.wants/"*"initctl"* \
-    && rm -f "/lib/systemd/system/"*"ask-password"* \
-    # Fedora specific
-    && rm -f "/lib/systemd/system/basic.target.wants/"* \
-    && (for i in "/etc/systemd/system/"*".wants/"*; do \
-        # delete all files except the ones mentioned
-        if  [ "$(basename "${i}")" = "crond.service" ] \
-         || [ "$(basename "${i}")" = "systemd-journald-audit.socket" ]; \
-        then continue; \
-        else rm -f "${i}"; fi; done) \
-    && (for i in "/lib/systemd/system/multi-user.target.wants/"*; do\
-        # delete all files except the ones mentioned
-        if  [ "$(basename "${i}")" = "systemd-update-utmp-runlevel.service" ] \
-         || [ "$(basename "${i}")" = "systemd-user-sessions.service" ]; \
-        then continue; \
-        else rm -f "${i}"; fi; \
-    done) \
-    && rm -f "/lib/systemd/system/anaconda.target.wants/"*
-
 # Install required packages and clean-up package manager caches afterwards.
 # Packages are included for these purposes:
 #
 # - Overall compatibility and network functionality:
-#   iproute, procps-ng, which
+#   iproute procps-ng systemd which
 #
 # - Easier debugging within the container (good feature-to-size ratio):
-#   iputils, less, vim-minimal
+#   iputils less vim-minimal
 #
 # - Accessing a container via Ansible:
-#   python3, python3-libdnf5, sudo
+#   python3 python3-libdnf5 sudo
 RUN dnf -y install \
         iproute \
         procps-ng \
+        systemd \
         which \
         iputils \
         less \
@@ -62,6 +35,41 @@ RUN dnf -y install \
         python3-libdnf5 \
         sudo \
     && dnf clean all
+
+# Configure systemd, remove inconvenient systemd units and services.
+# Helpful resources to determine problematic units to be removed:
+#   systemctl list-dependencies
+#   systemctl list-units --state=waiting
+#   systemctl list-units --state=failed
+#   systemctl mask (if not available: cd path && ln -s -f "/dev/null")
+#   https://www.freedesktop.org/software/systemd/man/latest/bootup.html
+RUN systemctl mask \
+        # Prevent login prompts, agetty on agetty on tty[1-6] etc.
+        console-getty.service \
+        getty.target \
+        systemd-logind.service \
+        systemd-ask-password-console.service \
+        systemd-ask-password-plymouth.service \
+        systemd-ask-password-wall.service \
+        # Filesystem related
+        dev-hugepages.mount \
+        sys-fs-fuse-connections.mount \
+        systemd-remount-fs.service \
+        # Miscellaneous
+        systemd-initctl.service \
+        systemd-machine-id-commit.service \
+        systemd-random-seed.service \
+        systemd-udevd.service \
+        systemd-udev-trigger.service \
+        # Fedora specific
+        anaconda.service \
+        anaconda.target \
+        systemd-oomd.service \
+        systemd-oomd.socket \
+        systemd-resolved.service \
+    && systemctl disable \
+        # Fedora specific
+        dnf-makecache.timer
 
 # Ensure non-interactive sudo commands work in containerized environments where
 # TTY allocation is often unavailable or undesired (if needed, it is usually
