@@ -49,7 +49,7 @@ RUN dnf -y install systemd \
 # - Easier debugging within the container (good feature-to-size ratio):
 #   iputils, less, vim-minimal
 #
-# - Accessing a VM via Ansible:
+# - Accessing a container via Ansible:
 #   python3, python3-libdnf5, sudo
 RUN dnf -y install \
         iproute \
