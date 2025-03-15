@@ -37,10 +37,10 @@ The image aims to replicate a "VM-like" operating system environment while maint
 
 ## How to build<a id="build"></a>
 
-The sources are available at the [`foundata/oci-fedora41-itt` repository](https://github.com/foundata/oci-fedora41-itt). To build the image locally, do the following:
+To build the image locally, do the following:
 
 1. [Install Podman](https://podman.io/docs/installation).
-2. Clone or pull the latest changes from this Git repository.
+2. Clone or pull the latest changes from the [`foundata/oci-fedora41-itt` git repository](https://github.com/foundata/oci-fedora41-itt).
 3. Change into the directory and execute the [build command](https://docs.podman.io/en/latest/markdown/podman-build.1.html):
    ```bash
    podman build -t fedora41-itt .
