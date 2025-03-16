@@ -2,14 +2,13 @@ FROM fedora:41
 LABEL description="Fedora 41, Integration Test Target (ITT) with systemd"
 LABEL maintainer="foundata GmbH (https://foundata.com)"
 
-# Inform systemd it's running in a container and specifies the container manager
-# type. This affects systemd's behavior in containerized environments (see
-# systemd's src/basic/virt.c). Docker users can overwrite this with
-# "--env container=docker".
+# Inform systemd it's running in a container and specify the container manager
+# type (this may affect the behavior, see src/basic/virt.c).
+# Docker users can overwrite this with "--env container=docker".
 ENV container=podman
 
-# Ensure Python output goes directly to terminal without buffering, preventing
-# loss of partial output if an application crashes.
+# Ensure Python output goes directly to the terminal without buffering,
+# preventing loss of partial output if an application crashes.
 ENV PYTHONUNBUFFERED=1
 
 # Install required packages and clean-up package manager caches afterwards.
@@ -36,7 +35,7 @@ RUN dnf -y install \
         sudo \
     && dnf clean all
 
-# Configure systemd, remove inconvenient systemd units and services.
+# Configure systemd, mask or remove inconvenient systemd units and services.
 # Helpful resources to determine problematic units to be removed:
 #   systemctl list-dependencies
 #   systemctl list-units --state=waiting
