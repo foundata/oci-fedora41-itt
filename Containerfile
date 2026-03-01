@@ -15,7 +15,7 @@ ENV PYTHONUNBUFFERED=1
 # Packages are included for these purposes:
 #
 # - Overall compatibility and network functionality:
-#   iproute procps-ng systemd which
+#   ca-certificates iproute procps-ng systemd which
 #
 # - Easier debugging within the container (good feature-to-size ratio):
 #   iputils less vim-minimal
@@ -23,6 +23,7 @@ ENV PYTHONUNBUFFERED=1
 # - Accessing a container via Ansible:
 #   python3 python3-libdnf5 sudo
 RUN dnf -y install \
+        ca-certificates \
         iproute \
         procps-ng \
         systemd \
